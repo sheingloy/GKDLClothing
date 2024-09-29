@@ -15,7 +15,7 @@ app.use(cookieSession({
 }));
 
 app.set('view engine', 'ejs');
-
+app.use(express.static('public'));
 const db = require('./models/db');
 
 app.use('/', userRoutes);

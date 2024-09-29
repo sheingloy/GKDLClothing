@@ -54,7 +54,7 @@ CREATE TABLE `orders` (
   `address` text DEFAULT NULL,
   `total_products` int(11) NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
-  `placed_on` datetime NOT NULL,
+  `placed_on` CURRENT_TIMESTAMP NOT NULL,
   `payment_status` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
