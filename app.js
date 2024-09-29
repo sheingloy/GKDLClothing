@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cookieSession = require('cookie-session');
 
-const port = 3000;
+const port = 3001;
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
