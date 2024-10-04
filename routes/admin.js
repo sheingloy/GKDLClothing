@@ -4,9 +4,12 @@ const Cart = require('../models/cart');
 const Orders = require('../models/orders');
 const Products = require('../models/products');
 const Users = require('../models/users');
+<<<<<<< HEAD
 const multer = require('multer');
 const path = require('path');
 const productController = require('../controllers/productController');
+=======
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
 
 router.get('/cart', (req, res) => {
   Cart.getAll().then((results) => {
@@ -44,6 +47,7 @@ router.get('/dashboard', async (req, res) => {
   res.render('admin/dashboard', { salesData, numCustomers, topSales });
 });
 
+<<<<<<< HEAD
 const storage = multer.diskStorage({
   destination: './public/uploads/',
   filename: (req, file, cb) => {
@@ -71,4 +75,6 @@ router.get('/admin/products/delete/:id', productController.deleteProductById);
 
 router.get('/admin/products', productController.findAllProducts);
 
+=======
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
 module.exports = router;

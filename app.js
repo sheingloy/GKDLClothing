@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cookieSession = require('cookie-session');
+<<<<<<< HEAD
 const multer = require('multer');
 const path = require('path');
 const userRoutes = require('./routes/userRouter');
@@ -55,6 +56,25 @@ app.get('/', (req, res) => {
 });
 
 
+=======
+
+const port = 3001;
+
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
+
+app.set('view engine', 'ejs');
+
+const db = require('./models/db');
+
+app.use('/admin', require('./routes/admin'));
+app.use('/authentication', require('./routes/authentication'));
+
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });

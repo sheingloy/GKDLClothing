@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- views/admin/add-product.ejs -->
 <!DOCTYPE html>
 <html lang="en">
@@ -39,3 +40,11 @@
     </form>
 </body>
 </html>
+=======
+<h1>Products</h1>
+<ul>
+  <% products.forEach((product) => { %>
+    <li><%= product.name %> - <%= product.price %></li>
+  <% }); %>
+</ul>
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750

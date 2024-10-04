@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const db = require('../config/db');
 
 const Users = {
@@ -12,6 +13,11 @@ const Users = {
       });
     });
   },
+=======
+const db = require('./db');
+
+const Users = {
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
   getAll: () => {
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM users', (err, results) => {
@@ -25,7 +31,11 @@ const Users = {
   },
   getById: (id) => {
     return new Promise((resolve, reject) => {
+<<<<<<< HEAD
       db.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
+=======
+      db.query('SELECT * FROM users WHERE id = ?', id, (err, results) => {
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
         if (err) {
           reject(err);
         } else {
@@ -36,8 +46,12 @@ const Users = {
   },
   create: (data) => {
     return new Promise((resolve, reject) => {
+<<<<<<< HEAD
       const { id, email, password, user_type } = data;
       db.query('INSERT INTO users (id, email, password, user_type) VALUES (?, ?, ?, ?)', [id, email, password, user_type], (err, results) => {
+=======
+      db.query('INSERT INTO users SET ?', data, (err, results) => {
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
         if (err) {
           reject(err);
         } else {
@@ -59,7 +73,11 @@ const Users = {
   },
   delete: (id) => {
     return new Promise((resolve, reject) => {
+<<<<<<< HEAD
       db.query('DELETE FROM users WHERE id = ?', [id], (err, results) => {
+=======
+      db.query('DELETE FROM users WHERE id = ?', id, (err, results) => {
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
         if (err) {
           reject(err);
         } else {
@@ -70,4 +88,8 @@ const Users = {
   }
 };
 
+<<<<<<< HEAD
 module.exports = Users;
+=======
+module.exports = Users;
+>>>>>>> c85231272cc110049d7fbe01948b9e743d077750
