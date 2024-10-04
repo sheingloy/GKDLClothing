@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        a{
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5">Add Product</h1>
+        <form action="/admin/products" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category" class="form-control">
+                    <option value="Shirts">Shirts</option>
+                    <option value="Masks">Masks</option>
+                    <option value="Perfume">Perfume</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="details">Details:</label>
+                <textarea id="details" name="details" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="size">Size:</label>
+                <select id="size" name="size" class="form-control">
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" step="0.01" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="image">Image:</label>
+                <input type="file" id="image" name="image" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Product</button>
+            <button class="btn btn-dark"><a href="./dashboard">Back</a></button>
+        </form>
+    </div>
+</body>
+</html>
