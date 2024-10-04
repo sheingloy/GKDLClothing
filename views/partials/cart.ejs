@@ -1,0 +1,39 @@
+
+
+  <main class="container mt-5">
+    <h1 class="text-center">Cart Page</h1>
+    <p class="mt-4">Your selected items:</p>
+    <!-- Cart Items Table -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Product</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+          <th scope="col">Total</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Product Name 1</td>
+          <td><input type="number" class="form-control" value="1" min="1"></td>
+          <td>$10.00</td>
+          <td>$10.00</td>
+          <td><button class="btn btn-danger">Remove</button></td>
+        </tr>
+        <tr>
+          <td>Product Name 2</td>
+          <td><input type="number" class="form-control" value="1" min="1"></td>
+          <td>$15.00</td>
+          <td>$15.00</td>
+          <td><button class="btn btn-danger">Remove</button></td>
+        </tr>
+        <!-- Add more product rows as needed -->
+      </tbody>
+    </table>
+    <div class="text-right">
+      <h4>Total: $25.00</h4>
+      <button class="btn btn-primary">Proceed to Checkout</button>
+    </div>
+  </main>
