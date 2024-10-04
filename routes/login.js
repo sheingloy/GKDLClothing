@@ -38,7 +38,11 @@ router.post('/login', async (req, res) => {
 
     // Successful login for regular users
     console.log('User logged in successfully');
+<<<<<<< HEAD
     res.redirect('/');
+=======
+    res.redirect('/dashboard');
+>>>>>>> 18b7917c18baef235069b58d4d908207b254f0f7
   } catch (err) {
     console.error('Error logging in:', err);
     res.status(500).send('Error logging in');

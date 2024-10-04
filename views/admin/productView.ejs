@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -63,3 +64,52 @@
     </div>
 </body>
 </html>
+=======
+    <title>Product Management</title>
+</head>
+<body>
+    <h1>Product Management</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Details</th>
+                <th>Size</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (products && products.length) { %>
+                <% products.forEach(product => { %>
+                    <tr>
+                        <td><%= product.id %></td>
+                        <td><%= product.name %></td>
+                        <td><%= product.category %></td>
+                        <td><%= product.details %></td>
+                        <td><%= product.size %></td>
+                        <td><%= product.price %></td>
+                        <td><%= product.image %></td>
+                        <td>
+                            <form action="/admin/products/update/<%= product.id %>" method="POST">
+                                <button type="submit">Update</button>
+                            </form>
+                            <form action="/admin/products/delete/<%= product.id %>" method="GET">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="8">No products found</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>
+>>>>>>> 18b7917c18baef235069b58d4d908207b254f0f7
