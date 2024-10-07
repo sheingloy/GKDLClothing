@@ -1,0 +1,163 @@
+<main class="container mt-5">
+  <h1 class="text-center">Cart Page</h1>
+  <p class="mt-4">Your selected items:</p>
+  <!-- Cart Items Table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Product</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Price</th>
+        <th scope="col">Total</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (cartItems && cartItems.length > 0) { %> <!-- Check if cartItems exists -->
+        <% cartItems.forEach(item => { %>
+          <tr>
+            <td><%= item.name %></td>
+            <td>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-secondary btn-sm me-2 decrease-quantity" data-id="<%= item.id %>">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <span class="quantity-value" id="quantity-<%= item.id %>"><%= item.quantity %></span>
+                <button class="btn btn-secondary btn-sm ms-2 increase-quantity" data-id="<%= item.id %>">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </td>
+            <td><%= item.price.toFixed(2) %> PHP</td>
+            <td id="total-<%= item.id %>"><%= (item.price * item.quantity).toFixed(2) %> PHP</td>
+            <td><button class="btn btn-danger" data-id="<%= item.id %>">Remove</button></td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" class="text-center">No items in the cart.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <div class="text-right">
+    <h4>Total: <span id="cart-total"><%= cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2) %></span> PHP</h4>
+    <button id="checkout-button" class="btn btn-primary">Proceed to Checkout</button>
+  </div>
+</main>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Checkout button event listener
+    document.getElementById('checkout-button').addEventListener('click', function () {
+      // Calculate total amount and total items
+      const cartItems = Array.from(document.querySelectorAll('tbody tr'));
+      const totalAmount = parseFloat(document.getElementById('cart-total').textContent);
+      const totalItems = cartItems.reduce((sum, row) => {
+        const quantity = parseInt(row.querySelector('.quantity-value').textContent);
+        return sum + quantity;
+      }, 0);
+
+      // Store total amount and total items in local storage
+      localStorage.setItem('totalAmount', totalAmount.toFixed(2));
+      localStorage.setItem('totalItems', totalItems.toString());
+
+      // Redirect to checkout page
+      window.location.href = '/checkout';
+    });
+
+    // Function to update total price in the cart
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll('tbody tr').forEach(row => {
+        const quantity = parseInt(row.querySelector('.quantity-value').textContent);
+        const price = parseFloat(row.querySelector('td:nth-child(3)').textContent);
+        const itemTotal = quantity * price;
+        row.querySelector('td:nth-child(4)').textContent = itemTotal.toFixed(2) + ' PHP';
+        total += itemTotal;
+      });
+      document.getElementById('cart-total').textContent = total.toFixed(2);
+    }
+
+    // Increase quantity button event listener
+    document.querySelectorAll('.increase-quantity').forEach(button => {
+      button.addEventListener('click', function () {
+        const itemId = this.getAttribute('data-id');
+        const quantityDisplay = document.getElementById(`quantity-${itemId}`);
+        let currentQuantity = parseInt(quantityDisplay.textContent);
+        currentQuantity++;
+        quantityDisplay.textContent = currentQuantity;
+
+        updateCart(itemId, currentQuantity);
+        updateTotal();
+      });
+    });
+
+    // Decrease quantity button event listener
+    document.querySelectorAll('.decrease-quantity').forEach(button => {
+      button.addEventListener('click', function () {
+        const itemId = this.getAttribute('data-id');
+        const quantityDisplay = document.getElementById(`quantity-${itemId}`);
+        let currentQuantity = parseInt(quantityDisplay.textContent);
+        
+        if (currentQuantity > 1) {
+          currentQuantity--;
+          quantityDisplay.textContent = currentQuantity;
+
+          updateCart(itemId, currentQuantity);
+          updateTotal();
+        }
+      });
+    });
+
+    // Remove item button event listener
+    document.querySelectorAll('.btn-danger').forEach(button => {
+      button.addEventListener('click', function () {
+        const cartId = this.getAttribute('data-id');
+        removeFromCart(cartId);
+      });
+    });
+
+    // Function to update cart item quantity
+    function updateCart(cartId, quantity) {
+      fetch('/cart/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cart_id: cartId, quantity: quantity }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+    // Function to remove item from cart
+    function removeFromCart(cartId) {
+      fetch(`/cart/remove/${cartId}`, {
+        method: 'POST',
+      })
+      .then(response => {
+        if (response.ok) {
+          location.reload();
+        } else {
+          console.error('Failed to remove item from cart.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  });
+</script>

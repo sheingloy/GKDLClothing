@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="/path/to/bootstrap.css"> <!-- Update with the correct path -->
+    <style>
+        /* Custom styles for modal */
+        .modal-content {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        #receiptContent {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<main class="container mt-5">
+    <h1 class="text-center">Checkout Page</h1>
+
+    <form id="checkout-form" class="custom-checkout-form">
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h4>Billing Information</h4>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="text" class="form-control" id="contact" placeholder="Enter your contact number" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Shipping Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter your address" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Payment Information</h4>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select class="form-control" id="paymentMethod" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="cash_on_delivery">Cash on Delivery</option>
+                        <option value="gcash">GCash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="total">Total Amount</label>
+                    <input type="text" class="form-control" id="total" placeholder="Enter total amount" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="itemCount">Total Items</label>
+                    <input type="text" class="form-control" id="itemCount" placeholder="Total items bought" required readonly>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block custom-submit-btn">Complete Purchase</button>
+    </form>
+</main>
+
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">Receipt</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="receiptContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveReceipt">Download Receipt</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Use CDN for html2canvas -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.3.2/dist/html2canvas.min.js"></script>
+<script src="/path/to/jquery.js"></script> <!-- Update with the correct path -->
+<script src="/path/to/bootstrap.js"></script> <!-- Update with the correct path -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Retrieve total amount and total items from local storage
+        const totalAmount = localStorage.getItem('totalAmount');
+        const totalItems = localStorage.getItem('totalItems');
+
+        // Set the total amount and total items in the respective input fields
+        if (totalAmount) {
+            document.getElementById('total').value = totalAmount + ' PHP'; // Set the total amount
+        }
+        if (totalItems) {
+            document.getElementById('itemCount').value = totalItems; // Set the total items
+        }
+    });
+
+    document.querySelector('.custom-checkout-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const name = document.getElementById('name').value;
+        const number = document.getElementById('contact').value;
+        const method = document.getElementById('paymentMethod').value;
+        const address = document.getElementById('address').value;
+        const totalProducts = localStorage.getItem('totalItems'); // Retrieve total items from local storage
+        const totalPrice = localStorage.getItem('totalAmount'); // Retrieve total amount from local storage
+
+        // Log the form data for debugging
+        console.log('Form Data:', { name, number, method, address, totalProducts, totalPrice });
+
+        // Send a POST request to the server
+        fetch('/checkout/create-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name,
+                number,
+                method,
+                address,
+                total_products: totalProducts,
+                total_price: parseFloat(totalPrice), // Ensure total price is a number
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message); // Display the server message
+                if (data.orderId) {
+                    // Display the receipt in the modal
+                    document.getElementById('receiptContent').innerHTML = `
+                        <h4>Order Summary</h4>
+                        <p><strong>Name:</strong> ${name}</p>
+                        <p><strong>Contact Number:</strong> ${number}</p>
+                        <p><strong>Payment Method:</strong> ${method}</p>
+                        <p><strong>Shipping Address:</strong> ${address}</p>
+                        <p><strong>Total Products:</strong> ${totalProducts}</p>
+                        <p><strong>Total Price:</strong> ${totalPrice} PHP</p>
+                        <p><strong>Payment Status:</strong> Pending</p>
+                    `;
+                    $('#receiptModal').modal('show'); // Show the modal
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to place order. Please try again.'); // Show error message
+        });
+    });
+
+    document.getElementById('saveReceipt').addEventListener('click', function() {
+        // Use html2canvas to convert the receipt content to an image
+        html2canvas(document.querySelector("#receiptContent")).then(canvas => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL("image/png"); // Create a data URL from the canvas
+            link.download = 'receipt.png'; // Set the filename
+            link.click(); // Trigger the download
+        }).catch(err => {
+            console.error('Error saving image:', err);
+        });
+    });
+</script>
+</body>
+</html>
